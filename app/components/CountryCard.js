@@ -13,7 +13,7 @@ export default function CountryCard({ country }) {
         <p>Capital: {country.capital ? country.capital[0] : 'N/A'}</p>
         <p>Region: {country.region}</p>
         <Link
-          href={`/country/${country.cca3}`}
+          href={`/country?code=${country.cca3}`}
           className="text-blue-600 mt-2 inline-block"
         >
           View Details
