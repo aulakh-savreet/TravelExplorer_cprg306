@@ -1,8 +1,8 @@
 'use client';
 
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { useEffect } from 'react';
 import L from 'leaflet';
-import { useEffect, useState } from 'react';
+import 'leaflet/dist/leaflet.css';
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -13,34 +13,34 @@ L.Icon.Default.mergeOptions({
 });
 
 export default function MapComponent({ latlng, countryName }) {
-  const position = latlng || [0, 0];
-  const [isClient, setIsClient] = useState(false);
-
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+    if (latlng[0] === 0 && latlng[1] === 0) return; 
 
-  if (!isClient) {
-    return null; // Prevent server-side rendering issues
-  }
+    const map = L.map('map').setView(latlng, 5);
 
-  return (
-    <div className="mt-4">
-      <h2 className="text-2xl font-bold mb-2">Location Map</h2>
-      <MapContainer
-        center={position}
-        zoom={5}
-        scrollWheelZoom={false}
-        className="h-64 w-full"
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker position={position}>
-          <Popup>{countryName}</Popup>
-        </Marker>
-      </MapContainer>
-    </div>
-  );
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 18,
+    }).addTo(map);
+
+    if (latlng && countryName) {
+      L.marker(latlng)
+        .addTo(map)
+        .bindPopup(countryName)
+        .openPopup();
+    }
+
+    const handleResize = () => {
+      map.invalidateSize();
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      map.remove();
+    };
+  }, [latlng, countryName]);
+
+  return <div id="map" className="h-96 w-full mt-8 rounded-lg overflow-hidden shadow"></div>;
 }

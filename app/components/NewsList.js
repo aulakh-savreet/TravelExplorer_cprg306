@@ -39,23 +39,37 @@ export default function NewsList({ countryName }) {
     }
   }, [countryName]);
 
-  if (loading) return <p>Loading news...</p>;
-  if (error) return <p>{error}</p>;
-  if (articles.length === 0) return <p>No news articles found.</p>;
+  if (loading) return <p className="text-center">Loading news...</p>;
+  if (error) return <p className="text-center text-red-600">{error}</p>;
+  if (articles.length === 0) return <p className="text-center">No news articles found.</p>;
 
   return (
-    <div className="mt-4">
-      <h2 className="text-2xl font-bold mb-2">Latest News in {countryName}</h2>
-      <ul>
+    <div className="mt-8">
+      <h2 className="text-2xl font-bold mb-4">Latest News in {countryName}</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {articles.map((article, index) => (
-          <li key={index} className="mb-4">
-            <a href={article.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-              <h3 className="text-xl font-semibold">{article.title}</h3>
-            </a>
-            <p>{article.description}</p>
-          </li>
+          <a
+            key={index}
+            href={article.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block bg-white shadow rounded-lg overflow-hidden hover:shadow-xl transition duration-300"
+          >
+            {article.image && (
+              <img
+                src={article.image}
+                alt={article.title}
+                className="w-full h-48 object-cover"
+              />
+            )}
+            <div className="p-4">
+              <h3 className="text-xl font-semibold mb-2">{article.title}</h3>
+              <p className="text-gray-600 mb-4">{article.description}</p>
+              <p className="text-sm text-gray-500">{new Date(article.publishedAt).toLocaleDateString()}</p>
+            </div>
+          </a>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
