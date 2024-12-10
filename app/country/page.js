@@ -1,3 +1,5 @@
+// app/country/page.js
+
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -8,6 +10,7 @@ import Footer from '../components/Footer';
 import NewsList from '../components/NewsList';
 import MapComponent from '../components/MapComponent';
 import RegionSelector from '../components/RegionSelector';
+import Image from 'next/image'; 
 
 export default function CountryProfile() {
   const router = useRouter();
@@ -161,7 +164,10 @@ export default function CountryProfile() {
               <Image
                 src={country.flags.svg}
                 alt={`${country.name.common} flag`}
+                width={500} 
+                height={300} 
                 className="w-full h-64 object-cover"
+                priority={false} 
               />
             </div>
             <div className="md:w-2/3 p-6">
@@ -186,6 +192,8 @@ export default function CountryProfile() {
               <Image
                 src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
                 alt="Weather icon"
+                width={80} // Specify appropriate width
+                height={80} // Specify appropriate height
                 className="w-20 h-20"
               />
               <div className="ml-4">
@@ -202,6 +210,8 @@ export default function CountryProfile() {
               <Image
                 src={`http://openweathermap.org/img/wn/${regionWeather.weather[0].icon}@2x.png`}
                 alt="Weather icon"
+                width={80} 
+                height={80} 
                 className="w-20 h-20"
               />
               <div className="ml-4">

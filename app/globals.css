@@ -1,3 +1,5 @@
+/* app/globals.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,5 +14,10 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: sans-serif;
+  font-family: 'Inter', sans-serif; /* Apply the imported Inter font */
+  background-color: white;
+  color: #1F2937; /* Tailwind's gray-800 */
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+

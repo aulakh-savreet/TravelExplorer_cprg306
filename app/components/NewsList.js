@@ -1,9 +1,10 @@
+// app/components/NewsList.js
+
 'use client';
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
-
 
 export default function NewsList({ countryName }) {
   const [articles, setArticles] = useState([]);
@@ -61,7 +62,10 @@ export default function NewsList({ countryName }) {
               <Image 
                 src={article.image}
                 alt={article.title}
+                width={500} 
+                height={300} 
                 className="w-full h-48 object-cover"
+                priority={false} 
               />
             )}
             <div className="p-4">
