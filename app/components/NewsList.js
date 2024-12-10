@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import axios from 'axios';
 
 export default function NewsList({ countryName }) {
@@ -48,7 +49,7 @@ export default function NewsList({ countryName }) {
       <h2 className="text-2xl font-bold mb-4">Latest News in {countryName}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {articles.map((article, index) => (
-          <a
+          <Link
             key={index}
             href={article.url}
             target="_blank"
@@ -62,7 +63,6 @@ export default function NewsList({ countryName }) {
                 width={500} 
                 height={300} 
                 className="w-full h-48 object-cover"
-                priority={false} 
               />
             )}
             <div className="p-4">
@@ -70,7 +70,7 @@ export default function NewsList({ countryName }) {
               <p className="text-gray-600 mb-4">{article.description}</p>
               <p className="text-sm text-gray-500">{new Date(article.publishedAt).toLocaleDateString()}</p>
             </div>
-          </a>
+          </Link>
         ))}
       </div>
     </div>

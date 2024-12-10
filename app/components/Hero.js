@@ -1,3 +1,5 @@
+// components/Hero.js
+
 import Link from 'next/link';
 import SearchBar from './SearchBar'; 
 
@@ -8,12 +10,8 @@ export default function Hero() {
       <img
         src="/images/Travel.webp" 
         alt="Beautiful Travel Destination"
-        layout="fill"
-        objectFit="cover"
-        quality={75} 
-        priority 
-        placeholder="blur" 
-        blurDataURL="/images/Travel-blur.webp" 
+        className="absolute inset-0 w-full h-full object-cover"
+        loading="eager" 
       />
 
       {/* Overlay */}
@@ -30,10 +28,10 @@ export default function Hero() {
 
         <SearchBar />
 
-        <Link href="/search">
-          <span className="bg-primary hover:bg-secondary text-white font-semibold py-3 px-6 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-secondary mt-6 cursor-pointer">
+        <Link href="/search" passHref>
+          <button className="bg-primary hover:bg-secondary text-white font-semibold py-3 px-6 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-secondary mt-6">
             Start Your Journey
-          </span>
+          </button>
         </Link>
       </div>
     </section>

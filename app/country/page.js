@@ -1,5 +1,3 @@
-// app/country/page.js
-
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
@@ -11,7 +9,6 @@ import NewsList from '../components/NewsList';
 import dynamic from 'next/dynamic';
 import RegionSelector from '../components/RegionSelector';
 
-// Dynamically import MapComponent with SSR disabled
 const MapComponent = dynamic(() => import('../components/MapComponent'), {
   ssr: false,
 });
