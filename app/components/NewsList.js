@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Image from 'next/image';
+
 
 export default function NewsList({ countryName }) {
   const [articles, setArticles] = useState([]);
@@ -56,7 +58,7 @@ export default function NewsList({ countryName }) {
             className="block bg-white shadow rounded-lg overflow-hidden hover:shadow-xl transition duration-300"
           >
             {article.image && (
-              <img
+              <Image 
                 src={article.image}
                 alt={article.title}
                 className="w-full h-48 object-cover"

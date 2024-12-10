@@ -158,7 +158,7 @@ export default function CountryProfile() {
         <div className="bg-white shadow-md rounded-lg overflow-hidden mb-8">
           <div className="md:flex">
             <div className="md:w-1/3">
-              <img
+              <Image
                 src={country.flags.svg}
                 alt={`${country.name.common} flag`}
                 className="w-full h-64 object-cover"
@@ -183,7 +183,7 @@ export default function CountryProfile() {
           {/* Capital Weather */}
           {weather && (
             <div className="bg-white shadow rounded-lg p-6 flex items-center">
-              <img
+              <Image
                 src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
                 alt="Weather icon"
                 className="w-20 h-20"
@@ -199,7 +199,7 @@ export default function CountryProfile() {
           {/* Region Weather */}
           {selectedRegion && regionWeather && (
             <div className="bg-white shadow rounded-lg p-6 flex items-center">
-              <img
+              <Image
                 src={`http://openweathermap.org/img/wn/${regionWeather.weather[0].icon}@2x.png`}
                 alt="Weather icon"
                 className="w-20 h-20"
