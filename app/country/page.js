@@ -2,17 +2,39 @@
 
 'use client';
 
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import NewsList from '../components/NewsList';
-import MapComponent from '../components/MapComponent';
+import dynamic from 'next/dynamic';
 import RegionSelector from '../components/RegionSelector';
-import Image from 'next/image'; 
 
-export default function CountryProfile() {
+// Dynamically import MapComponent with SSR disabled
+const MapComponent = dynamic(() => import('../components/MapComponent'), {
+  ssr: false,
+});
+
+export default function CountryPage() {
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <Suspense 
+        fallback={
+          <main className="container mx-auto flex-grow p-4 flex justify-center items-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary"></div>
+          </main>
+        }
+      >
+        <CountryContent />
+      </Suspense>
+      <Footer />
+    </div>
+  );
+}
+
+function CountryContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const code = searchParams.get('code');
@@ -129,114 +151,105 @@ export default function CountryProfile() {
 
   if (error) {
     return (
-      <div className="flex flex-col min-h-screen">
-        <Header />
-        <main className="container mx-auto flex-grow p-4">
-          <div className="bg-red-100 text-red-700 p-4 rounded">
-            <p>{error}</p>
-          </div>
-        </main>
-        <Footer />
-      </div>
+      <main className="container mx-auto flex-grow p-4">
+        <div className="bg-red-100 text-red-700 p-4 rounded">
+          <p>{error}</p>
+        </div>
+      </main>
     );
   }
 
   if (loadingCountry || !country) {
     return (
-      <div className="flex flex-col min-h-screen">
-        <Header />
-        <main className="container mx-auto flex-grow p-4 flex justify-center items-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary"></div>
-        </main>
-        <Footer />
-      </div>
+      <main className="container mx-auto flex-grow p-4 flex justify-center items-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary"></div>
+      </main>
     );
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-neutral">
-      <Header />
-      <main className="container mx-auto flex-grow p-6">
-        {/* Country Overview */}
-        <div className="bg-white shadow-md rounded-lg overflow-hidden mb-8">
-          <div className="md:flex">
-            <div className="md:w-1/3">
-              <Image
-                src={country.flags.svg}
-                alt={`${country.name.common} flag`}
-                width={500} 
-                height={300} 
-                className="w-full h-64 object-cover"
-                priority={false} 
-              />
-            </div>
-            <div className="md:w-2/3 p-6">
-              <h1 className="text-3xl font-bold mb-4">{country.name.common}</h1>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <p><strong>Capital:</strong> {country.capital ? country.capital[0] : 'N/A'}</p>
-                <p><strong>Region:</strong> {country.region}</p>
-                <p><strong>Subregion:</strong> {country.subregion}</p>
-                <p><strong>Population:</strong> {country.population.toLocaleString()}</p>
-                <p><strong>Area:</strong> {country.area.toLocaleString()} km²</p>
-                <p><strong>Languages:</strong> {country.languages ? Object.values(country.languages).join(', ') : 'N/A'}</p>
-              </div>
+    <main className="container mx-auto flex-grow p-6 bg-neutral">
+      {/* Country Overview */}
+      <div className="bg-white shadow-md rounded-lg overflow-hidden mb-8">
+        <div className="md:flex">
+          <div className="md:w-1/3">
+            <img
+              src={country.flags.svg}
+              alt={`${country.name.common} flag`}
+              width={500}
+              height={300}
+              className="w-full h-64 object-cover"
+              loading="lazy"
+            />
+          </div>
+          <div className="md:w-2/3 p-6">
+            <h1 className="text-3xl font-bold mb-4">{country.name.common}</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <p><strong>Capital:</strong> {country.capital ? country.capital[0] : 'N/A'}</p>
+              <p><strong>Region:</strong> {country.region}</p>
+              <p><strong>Subregion:</strong> {country.subregion}</p>
+              <p><strong>Population:</strong> {country.population.toLocaleString()}</p>
+              <p><strong>Area:</strong> {country.area.toLocaleString()} km²</p>
+              <p><strong>Languages:</strong> {country.languages ? Object.values(country.languages).join(', ') : 'N/A'}</p>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Weather Information */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-          {/* Capital Weather */}
-          {weather && (
-            <div className="bg-white shadow rounded-lg p-6 flex items-center">
-              <Image
-                src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
-                alt="Weather icon"
-                width={80} // Specify appropriate width
-                height={80} // Specify appropriate height
-                className="w-20 h-20"
-              />
-              <div className="ml-4">
-                <h2 className="text-2xl font-semibold">Weather in {country.capital[0]}</h2>
-                <p className="text-gray-600 capitalize">{weather.weather[0].description}</p>
-                <p className="text-gray-800 text-xl">{weather.main.temp} °C</p>
-              </div>
+      {/* Weather Information */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        {/* Capital Weather */}
+        {weather && (
+          <div className="bg-white shadow rounded-lg p-6 flex items-center">
+            <img
+              src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+              alt="Weather icon"
+              width={80}
+              height={80}
+              className="w-20 h-20"
+            />
+            <div className="ml-4">
+              <h2 className="text-2xl font-semibold">Weather in {country.capital[0]}</h2>
+              <p className="text-gray-600 capitalize">{weather.weather[0].description}</p>
+              <p className="text-gray-800 text-xl">{weather.main.temp} °C</p>
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Region Weather */}
-          {selectedRegion && regionWeather && (
-            <div className="bg-white shadow rounded-lg p-6 flex items-center">
-              <Image
-                src={`http://openweathermap.org/img/wn/${regionWeather.weather[0].icon}@2x.png`}
-                alt="Weather icon"
-                width={80} 
-                height={80} 
-                className="w-20 h-20"
-              />
-              <div className="ml-4">
-                <h2 className="text-2xl font-semibold">Weather in {selectedRegion.name}</h2>
-                <p className="text-gray-600 capitalize">{regionWeather.weather[0].description}</p>
-                <p className="text-gray-800 text-xl">{regionWeather.main.temp} °C</p>
-              </div>
+        {/* Region Weather */}
+        {selectedRegion && regionWeather && (
+          <div className="bg-white shadow rounded-lg p-6 flex items-center">
+            <img
+              src={`https://openweathermap.org/img/wn/${regionWeather.weather[0].icon}@2x.png`}
+              alt="Weather icon"
+              width={80}
+              height={80}
+              className="w-20 h-20"
+            />
+            <div className="ml-4">
+              <h2 className="text-2xl font-semibold">Weather in {selectedRegion.name}</h2>
+              <p className="text-gray-600 capitalize">{regionWeather.weather[0].description}</p>
+              <p className="text-gray-800 text-xl">{regionWeather.main.temp} °C</p>
             </div>
-          )}
-        </div>
+          </div>
+        )}
+      </div>
 
-        {/* Region Selector */}
-        <RegionSelector
-          countryName={country.name.common} 
-          onSelectRegion={handleSelectRegion}
-        />
+      {/* Region Selector */}
+      <RegionSelector
+        countryName={country.name.common} 
+        onSelectRegion={handleSelectRegion}
+      />
 
-        {/* News Section */}
-        <NewsList
-          countryName={
-            selectedRegion ? selectedRegion.name : country.name.common
-          }
-        />
+      {/* News Section */}
+      <NewsList
+        countryName={
+          selectedRegion ? selectedRegion.name : country.name.common
+        }
+      />
 
-        {/* Interactive Map */}
+      {/* Interactive Map */}
+      <Suspense fallback={<div>Loading map...</div>}>
         <MapComponent
           latlng={
             selectedRegion && regionWeather
@@ -249,8 +262,7 @@ export default function CountryProfile() {
             selectedRegion ? selectedRegion.name : country.name.common
           }
         />
-      </main>
-      <Footer />
-    </div>
+      </Suspense>
+    </main>
   );
 }

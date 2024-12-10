@@ -1,10 +1,9 @@
 import Link from 'next/link';
-import Image from 'next/image';
 
 export default function CountryCard({ country }) {
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition duration-300">
-      <Image
+      <img
         src={country.flags.svg}
         alt={`${country.name.common} flag`}
         width={400}

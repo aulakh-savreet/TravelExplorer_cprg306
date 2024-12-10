@@ -1,12 +1,11 @@
-import Image from 'next/image';
 import Link from 'next/link';
-import SearchBar from './SearchBar'; // If integrating SearchBar into Hero
+import SearchBar from './SearchBar'; 
 
 export default function Hero() {
   return (
     <section aria-labelledby="hero-heading" className="relative w-full h-screen">
       {/* Background Image */}
-      <Image
+      <img
         src="/images/Travel.webp" 
         alt="Beautiful Travel Destination"
         layout="fill"

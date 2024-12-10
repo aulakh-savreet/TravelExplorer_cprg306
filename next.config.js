@@ -4,9 +4,8 @@
 const nextConfig = {
     reactStrictMode: true,
     images: {
-        domains: ['openweathermap.org', 'www.castanet.net','images.firstpost.com','static1.simpleflyingimages.com','cdnph.upi.com','res.cloudinary.com'], // Add other domains as needed
+      domains: ['flagcdn.com', 'openweathermap.org'],
     },
-    // You can add other configurations here
   };
   
   module.exports = nextConfig;
